@@ -1,16 +1,23 @@
-# gm_companion
+# GM Companion
 
-A new Flutter project.
+GM Companion is a Flutter application for tabletop RPG Game Masters.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Combat Tracker
+- Initiative Management
+- Status Effects
+- Dice Roller
+- Encounter Management (WIP)
+- Adaptive Music System (Planned)
+- LAN Sessions (Planned)
 
-A few resources to get you started if this is your first Flutter project:
+## Roadmap
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [x] Combat Tracker
+- [x] Dice Roller
+- [x] Status System
+- [ ] Encounter Creator
+- [ ] Music Engine
+- [ ] Local Multiplayer
+- [ ] Player Companion App
