@@ -32,4 +32,12 @@ class Encounter {
       round++;
     }
   }
+
+  void addParticipant(Participant participant) {
+    participants.add(participant);
+  }
+
+  void removeParticipant(Participant participant) {
+    participants.remove(participant);
+  }
 }

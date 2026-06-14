@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'combat_tracker_screen.dart';
+import 'create_encounter_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -86,9 +87,16 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              icon: const Icon(Icons.wifi),
-              label: const Text('Create Session'),
-              onPressed: () {},
+              icon: const Icon(Icons.edit_note),
+              label: const Text('Solo Mode'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CreateEncounterScreen(),
+                  ),
+                );
+              },
             ),
           ),
 
@@ -98,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: double.infinity,
             child: ElevatedButton.icon(
               icon: const Icon(Icons.login),
-              label: const Text('Join Session'),
+              label: const Text('Online Session'),
               onPressed: () {},
             ),
           ),
