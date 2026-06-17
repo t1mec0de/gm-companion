@@ -22,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('GM Companion')),
+      appBar: AppBar(title: const Text('MythOS')),
 
       body: pages[currentIndex],
 

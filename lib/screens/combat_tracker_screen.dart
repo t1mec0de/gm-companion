@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import '../data/demo_encounter.dart';
+import '../models/encounter.dart';
 import '../widgets/dice_roller_sheet.dart';
 
 class CombatTrackerScreen extends StatefulWidget {
-  const CombatTrackerScreen({super.key});
+  final Encounter? encounter;
+
+  const CombatTrackerScreen({super.key, this.encounter});
 
   @override
   State<CombatTrackerScreen> createState() => _CombatTrackerScreenState();
 }
 
 class _CombatTrackerScreenState extends State<CombatTrackerScreen> {
-  final encounter = demoEncounter;
+  late final Encounter encounter;
   bool initiativeConfirmed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    encounter = widget.encounter ?? demoEncounter;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +39,6 @@ class _CombatTrackerScreenState extends State<CombatTrackerScreen> {
             'Enter initiative for each participant',
             style: TextStyle(fontSize: 20),
           ),
-
           const SizedBox(height: 12),
 
           for (final p in encounter.participants)
@@ -171,7 +179,6 @@ class _CombatTrackerScreenState extends State<CombatTrackerScreen> {
                 setState(() {
                   p.takeDamage(5);
                 });
-
                 Navigator.pop(context);
               },
             ),
@@ -192,7 +199,6 @@ class _CombatTrackerScreenState extends State<CombatTrackerScreen> {
                 setState(() {
                   p.heal(5);
                 });
-
                 Navigator.pop(context);
               },
             ),
@@ -204,7 +210,6 @@ class _CombatTrackerScreenState extends State<CombatTrackerScreen> {
                 setState(() {
                   p.takeDamage(p.currentHp);
                 });
-
                 Navigator.pop(context);
               },
             ),
@@ -229,7 +234,6 @@ class _CombatTrackerScreenState extends State<CombatTrackerScreen> {
                   setState(() {
                     p.addStatus(status);
                   });
-
                   Navigator.pop(context);
                 },
               ),

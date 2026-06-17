@@ -11,7 +11,7 @@ class GMCompanionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'GM Companion',
+      title: 'MythOS',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
       home: const HomeScreen(),
