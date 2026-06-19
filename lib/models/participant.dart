@@ -23,6 +23,33 @@ class Participant {
     this.statuses = const [],
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type.name,
+      'maxHp': maxHp,
+      'currentHp': currentHp,
+      'initiative': initiative,
+      'imagePath': imagePath,
+    };
+  }
+
+  factory Participant.fromJson(Map<String, dynamic> json) {
+    return Participant(
+      id: json['id'],
+      name: json['name'],
+      type: ParticipantType.values.firstWhere(
+        (type) => type.name == json['type'],
+        orElse: () => ParticipantType.enemy,
+      ),
+      maxHp: json['maxHp'],
+      currentHp: json['currentHp'],
+      initiative: json['initiative'],
+      imagePath: json['imagePath'],
+    );
+  }
+
   void addStatus(StatusEffect status) {
     statuses.add(status);
   }
@@ -33,18 +60,12 @@ class Participant {
 
   void takeDamage(int amount) {
     currentHp -= amount;
-
-    if (currentHp < 0) {
-      currentHp = 0;
-    }
+    if (currentHp < 0) currentHp = 0;
   }
 
   void heal(int amount) {
     currentHp += amount;
-
-    if (currentHp > maxHp) {
-      currentHp = maxHp;
-    }
+    if (currentHp > maxHp) currentHp = maxHp;
   }
 
   bool get isDead => currentHp <= 0;

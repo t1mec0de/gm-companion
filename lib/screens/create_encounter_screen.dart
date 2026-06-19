@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/encounter.dart';
 import '../models/participant.dart';
 import 'combat_tracker_screen.dart';
+import 'library_screen.dart';
 
 class CreateEncounterScreen extends StatefulWidget {
   const CreateEncounterScreen({super.key});
@@ -99,6 +100,99 @@ class _CreateEncounterScreenState extends State<CreateEncounterScreen> {
     });
   }
 
+  void deleteParticipant(int index) {
+    setState(() {
+      participants.removeAt(index);
+    });
+  }
+
+  void editParticipant(int index) {
+    final participant = participants[index];
+
+    final nameController = TextEditingController(text: participant.name);
+    final hpController = TextEditingController(
+      text: participant.maxHp.toString(),
+    );
+    final initiativeController = TextEditingController(
+      text: participant.initiative.toString(),
+    );
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Edit Participant'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            TextField(
+              controller: hpController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Max HP'),
+            ),
+            TextField(
+              controller: initiativeController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(labelText: 'Initiative'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newMaxHp =
+                  int.tryParse(hpController.text) ?? participant.maxHp;
+
+              setState(() {
+                participants[index] = Participant(
+                  id: participant.id,
+                  name: nameController.text.trim().isEmpty
+                      ? participant.name
+                      : nameController.text.trim(),
+                  type: participant.type,
+                  maxHp: newMaxHp,
+                  currentHp: newMaxHp,
+                  initiative:
+                      int.tryParse(initiativeController.text) ??
+                      participant.initiative,
+                );
+              });
+
+              Navigator.pop(context);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void saveEncounter() {
+    if (participants.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Add at least one participant before saving'),
+        ),
+      );
+      return;
+    }
+
+    final encounterName = nameController.text.trim().isEmpty
+        ? 'Untitled Encounter'
+        : nameController.text.trim();
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('$encounterName saved coming soon')));
+  }
+
   void startCombat() {
     final encounterName = nameController.text.trim().isEmpty
         ? 'Untitled Encounter'
@@ -153,19 +247,24 @@ class _CreateEncounterScreenState extends State<CreateEncounterScreen> {
               style: TextStyle(color: Colors.grey),
             ),
 
-          for (final p in participants)
+          for (int index = 0; index < participants.length; index++)
             Card(
               child: ListTile(
+                onTap: () => editParticipant(index),
                 leading: Icon(
-                  p.type == ParticipantType.player
+                  participants[index].type == ParticipantType.player
                       ? Icons.person
-                      : p.type == ParticipantType.enemy
+                      : participants[index].type == ParticipantType.enemy
                       ? Icons.shield
                       : Icons.warning,
                 ),
-                title: Text(p.name),
+                title: Text(participants[index].name),
                 subtitle: Text(
-                  '${p.type.name} • HP: ${p.currentHp}/${p.maxHp} • Initiative: ${p.initiative}',
+                  '${participants[index].type.name} • HP: ${participants[index].currentHp}/${participants[index].maxHp} • Initiative: ${participants[index].initiative}',
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => deleteParticipant(index),
                 ),
               ),
             ),
@@ -192,7 +291,12 @@ class _CreateEncounterScreenState extends State<CreateEncounterScreen> {
                 label: const Text('Boss'),
               ),
               OutlinedButton.icon(
-                onPressed: () => showComingSoon('Library'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LibraryScreen()),
+                  );
+                },
                 icon: const Icon(Icons.menu_book),
                 label: const Text('Library'),
               ),
@@ -226,6 +330,17 @@ class _CreateEncounterScreenState extends State<CreateEncounterScreen> {
           ),
 
           const SizedBox(height: 24),
+
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: canStart ? saveEncounter : null,
+              icon: const Icon(Icons.save),
+              label: const Text('Save Encounter'),
+            ),
+          ),
+
+          const SizedBox(height: 8),
 
           SizedBox(
             width: double.infinity,
