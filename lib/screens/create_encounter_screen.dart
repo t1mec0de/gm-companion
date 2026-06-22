@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../models/encounter.dart';
 import '../models/participant.dart';
+import '../services/encounter_storage.dart';
 import 'combat_tracker_screen.dart';
 import 'library_screen.dart';
 
@@ -174,7 +176,7 @@ class _CreateEncounterScreenState extends State<CreateEncounterScreen> {
     );
   }
 
-  void saveEncounter() {
+  Future<void> saveEncounter() async {
     if (participants.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -188,9 +190,19 @@ class _CreateEncounterScreenState extends State<CreateEncounterScreen> {
         ? 'Untitled Encounter'
         : nameController.text.trim();
 
+    final encounter = Encounter(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      name: encounterName,
+      participants: participants,
+    );
+
+    await EncounterStorage.saveEncounter(encounter);
+
+    if (!mounted) return;
+
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text('$encounterName saved coming soon')));
+    ).showSnackBar(SnackBar(content: Text('$encounterName saved')));
   }
 
   void startCombat() {
