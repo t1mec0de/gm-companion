@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'edit_encounter_template_screen.dart';
 import '../models/encounter.dart';
 import '../services/encounter_storage.dart';
 import 'combat_tracker_screen.dart';
@@ -32,6 +32,21 @@ class _EncounterTemplatesScreenState extends State<EncounterTemplatesScreen> {
         builder: (_) => CombatTrackerScreen(encounter: encounter),
       ),
     );
+  }
+
+  Future<void> editEncounter(Encounter encounter) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => EditEncounterTemplateScreen(encounter: encounter),
+      ),
+    );
+
+    if (result == true) {
+      setState(() {
+        reloadEncounters();
+      });
+    }
   }
 
   Future<void> duplicateEncounter(Encounter encounter) async {
@@ -118,6 +133,10 @@ class _EncounterTemplatesScreenState extends State<EncounterTemplatesScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => editEncounter(encounter),
+                      ),
                       IconButton(
                         icon: const Icon(Icons.copy),
                         onPressed: () => duplicateEncounter(encounter),
